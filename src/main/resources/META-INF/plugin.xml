@@ -1,0 +1,24 @@
+<idea-plugin>
+    <id>com.victrix.Headerizer</id>
+    <name>Headerizer</name>
+    <vendor email="victrix@games.com" url="http://www.victrix.games">Victrix Games</vendor>
+
+    <description><![CDATA[
+    Convert a binary file into an Header code
+    ]]></description>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <group id="victrix.Headerizer" text="Headerizer" description="Convert binary file into header">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action class="com.victrix.plugins.Headerizer" id="victrix.actions.Headerizer" text="Headerizer..."/>
+        </group>
+    </actions>
+</idea-plugin>
