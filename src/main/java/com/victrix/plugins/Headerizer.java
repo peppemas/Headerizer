@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class Headerizer extends AnAction {
@@ -48,18 +50,21 @@ public class Headerizer extends AnAction {
             FileOutputStream fos = new FileOutputStream(foutput);
 
             fos.write("unsigned char buffer[] = {\n".getBytes());
-            int i = 0;
+            int readed = 0;
             int len = 0;
             int ret_offset = 0;
             StringBuilder sb = new StringBuilder();
+            StringBuilder ascii = new StringBuilder();
             do {
                 byte[] buf = new byte[1024];
-                i = fis.read(buf);
-                for (byte b : buf) {
-                    sb.append(String.format("0x%02X", b));
+                readed = fis.read(buf);
+                for (int i=0; i<readed; i++) {
+                    ascii.append((char)buf[i]);
+                    sb.append(String.format("0x%02X", buf[i]));
                     ret_offset++;
                     if (ret_offset > 12) {
-                        sb.append(",\n");
+                        sb.append(",").append("\t\t// ").append(PrettyAscii(ascii.toString())).append("\n");
+                        ascii = new StringBuilder();
                         ret_offset=0;
                     }  else {
                         sb.append(",");
@@ -67,9 +72,14 @@ public class Headerizer extends AnAction {
                 }
                 fos.write(sb.toString().getBytes());
                 sb.setLength(0);
-                len += i;
-            } while (i != -1);
-            fos.write("};\n".getBytes());
+                len += readed;
+            } while (readed != -1);
+
+            if (ascii.length() > 0) {
+                fos.write("\t\t// ".getBytes());
+                fos.write(PrettyAscii(ascii.toString()).getBytes());
+            }
+            fos.write("\n};\n".getBytes());
             fos.write("unsigned int buffer_len = ".getBytes());
             fos.write(Integer.toString(len).getBytes());
             fos.write(";\n".getBytes());
@@ -86,5 +96,20 @@ public class Headerizer extends AnAction {
         return Optional.ofNullable(filename)
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(0, filename.lastIndexOf(".")));
+    }
+
+    private String PrettyAscii(String original) {
+        //char[] output = StandardCharsets.US_ASCII.decode(ByteBuffer.wrap(original)).array();
+
+        // manage all non ASCII chars
+        original = original.replaceAll("[^\\x00-\\x7F]",".");
+
+        // manage all control chars
+        original = original.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]",".");
+
+        // manage all non-printable Unicode
+        original = original.replaceAll("\\p{C}", ".");
+
+        return original;
     }
 }
