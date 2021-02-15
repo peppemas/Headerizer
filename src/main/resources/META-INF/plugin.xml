@@ -16,7 +16,7 @@
     </extensions>
 
     <actions>
-        <group id="victrix.Headerizer" text="Headerizer" description="Convert binary file into header">
+        <group id="victrix.Headerizer" text="Headerizer" description="Convert a binary file into a C++ header file">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <action class="com.victrix.plugins.Headerizer" id="victrix.actions.Headerizer" text="Headerizer..."/>
         </group>
