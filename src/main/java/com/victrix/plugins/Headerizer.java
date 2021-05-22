@@ -110,6 +110,8 @@ public class Headerizer extends AnAction {
         // manage all non-printable Unicode
         original = original.replaceAll("\\p{C}", ".");
 
+        original = original.replace('\\', '.');
+
         return original;
     }
 }
