@@ -1,2 +1,2 @@
 # Headerizer
-A CLion plugin that transform a binary file into a C++ header
+A super simple CLion plugin that convert a binary file into a C++ header file.
