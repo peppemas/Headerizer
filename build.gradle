@@ -16,10 +16,10 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2021.1'
+    version '2021.2'
 }
 patchPluginXml {
     changeNotes """
-      Update to 2021.1 version<br>
+      Update to 2021.2 version<br>
     """
 }
